@@ -1,0 +1,28 @@
+# Visual Studio
+.vs/
+
+# Build artifacts
+bin/
+obj/
+
+# Rider
+.idea/
+
+# User-specific
+*.user
+*.suo
+
+# NuGet
+*.nupkg
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# JetBrains Rider caches
+*.sln.iml
+
+# OS files
+Thumbs.db
+.DS_Store
