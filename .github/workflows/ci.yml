@@ -1,0 +1,43 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '9.0' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore HelloConsole/HelloConsole.csproj
+
+      - name: Build
+        run: dotnet build HelloConsole/HelloConsole.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish HelloConsole/HelloConsole.csproj --configuration Release --no-build -o publish
+
+      - name: Verify publish output
+        run: ls -la publish || true
